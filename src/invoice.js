@@ -35,7 +35,11 @@ class LineItem extends React.Component {
                  onChange={amountChanged.bind(null, index)} />
         </td>
         <td width="15%">{this.calculateTotal()}</td>
-        <td width="4%">...</td>
+        <td width="4%">
+          <button className="btn btn-danger">
+            <span className="glyphicon glyphicon-trash"></span>
+          </button>
+        </td>
       </tr>
     );
   }
@@ -72,7 +76,7 @@ class InvoiceLineItems extends React.Component {
       <table className="table table-bordered table-hover">
         <tr>
           <th>Nr</th>
-          <th>Title</th>
+          <th>Name</th>
           <th>Price</th>
           <th>Amount</th>
           <th>Total</th>
@@ -86,6 +90,15 @@ class InvoiceLineItems extends React.Component {
                   amount={this.state.line_items[1]['amount']}
                   priceChanged={this.priceChanged}
                   amountChanged={this.amountChanged} />
+        <tr>
+          <td colSpan="4"></td>
+          <th>...</th>
+          <td>
+            <button className="btn btn-success">
+              <span className="glyphicon glyphicon-plus"></span>
+            </button>
+          </td>
+        </tr>
       </table>
     );
   }
