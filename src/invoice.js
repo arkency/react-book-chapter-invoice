@@ -36,7 +36,7 @@ class LineItem extends React.Component {
                  className="form-control"
                  onChange={amountChanged.bind(null, index)} />
         </td>
-        <td>${this.calculateTotal()}</td>
+        <td><h4>${this.calculateTotal()}</h4></td>
         <td>
           <button className="btn btn-danger"
                   onClick={deleteLineItem.bind(null, index)}>
@@ -115,7 +115,7 @@ class InvoiceLineItems extends React.Component {
       <tfoot>
         <tr>
           <td colSpan="4"></td>
-          <th>${this.calculateTotal()}</th>
+          <th><h4>${this.calculateTotal()}</h4></th>
           <td>
             <button className="btn btn-success"
                     onClick={this.addLineItem}>
