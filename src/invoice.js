@@ -49,12 +49,7 @@ class LineItem extends React.Component {
 class InvoiceLineItems extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      line_items: [
-        { price: null, amount: null },
-        { price: null, amount: null }
-      ]
-    };
+    this.state = { line_items: [{ price: null, amount: null }] };
 
     this.priceChanged = this.priceChanged.bind(this);
     this.amountChanged = this.amountChanged.bind(this);
@@ -84,34 +79,50 @@ class InvoiceLineItems extends React.Component {
                      .reduce((pv, cv) => pv + cv, 0);
   }
 
+  tableHeader() {
+    return(
+       <tr>
+         <th width="1%">Nr</th>
+         <th width="55%">Name</th>
+         <th width="20%">Price</th>
+         <th width="10%">Amount</th>
+         <th width="10%">Total</th>
+         <th width="4%">Action</th>
+       </tr>
+     );
+  }
+
+  tableFooter() {
+    return(
+      <tr>
+        <td colSpan="4"></td>
+        <th>${this.calculateTotal()}</th>
+        <td>
+          <button className="btn btn-success">
+            <span className="glyphicon glyphicon-plus"></span>
+          </button>
+        </td>
+      </tr>
+    );
+  }
+
   render() {
+    let line_items = [];
+
+    for(var index in this.state.line_items) {
+      line_items.push(
+        <LineItem index={index} price={this.state.line_items[index].price}
+                  amount={this.state.line_items[index].amount}
+                  priceChanged={this.priceChanged}
+                  amountChanged={this.amountChanged} />
+      );
+    }
+
     return(
       <table className="table table-bordered table-hover">
-        <tr>
-          <th width="1%">Nr</th>
-          <th width="50%">Name</th>
-          <th width="20%">Price</th>
-          <th width="10%">Amount</th>
-          <th width="15%">Total</th>
-          <th width="4%">Action</th>
-        </tr>
-        <LineItem index={0} price={this.state.line_items[0]['price']}
-                  amount={this.state.line_items[0]['amount']}
-                  priceChanged={this.priceChanged}
-                  amountChanged={this.amountChanged} />
-        <LineItem index={1} price={this.state.line_items[1]['price']}
-                  amount={this.state.line_items[1]['amount']}
-                  priceChanged={this.priceChanged}
-                  amountChanged={this.amountChanged} />
-        <tr>
-          <td colSpan="4"></td>
-          <th>${this.calculateTotal()}</th>
-          <td>
-            <button className="btn btn-success">
-              <span className="glyphicon glyphicon-plus"></span>
-            </button>
-          </td>
-        </tr>
+        {this.tableHeader()}
+        {line_items}
+        {this.tableFooter()}
       </table>
     );
   }
