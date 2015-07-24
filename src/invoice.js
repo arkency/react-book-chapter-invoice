@@ -1,11 +1,4 @@
 class LineItem extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.calculateTotal = this.calculateTotal.bind(this);
-    this.number = this.number.bind(this);
-  }
-
   number() {
     return (parseInt(this.props.index) + 1);
   }
