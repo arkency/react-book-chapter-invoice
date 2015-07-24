@@ -5,11 +5,9 @@ class LineItem extends React.Component {
 
   calculateTotal() {
     let { price, amount } = this.props;
-    let p = NaN, a = NaN;
-
-    p = parseFloat(price);
-    a = parseFloat(amount);
-    return ((isNaN(p) || isNaN(a)) ? '...' : p * a);
+    let p = parseFloat(price);
+    let a = parseFloat(amount);
+    return ((isNaN(p) || isNaN(a)) ? 0 : p * a);
   }
 
 
@@ -20,22 +18,25 @@ class LineItem extends React.Component {
 
     return(
       <tr>
-        <td width="1%">{this.number()}.</td>
-        <td width="50%">
+        <td>{this.number()}.</td>
+        <td>
           <input name="title" className="form-control" />
         </td>
-        <td width="15%">
-          <input name="price" value={price}
-                 className="form-control"
-                 onChange={priceChanged.bind(null, index)} />
+        <td>
+          <div className="input-group">
+            <div className="input-group-addon">$</div>
+            <input name="price" value={price}
+                   className="form-control"
+                   onChange={priceChanged.bind(null, index)} />
+          </div>
         </td>
-        <td width="15%">
+        <td>
           <input name="amount" value={amount}
                  className="form-control"
                  onChange={amountChanged.bind(null, index)} />
         </td>
-        <td width="15%">{this.calculateTotal()}</td>
-        <td width="4%">
+        <td>${this.calculateTotal()}</td>
+        <td>
           <button className="btn btn-danger">
             <span className="glyphicon glyphicon-trash"></span>
           </button>
@@ -71,16 +72,28 @@ class InvoiceLineItems extends React.Component {
     this.setState({ line_items });
   }
 
+  totalPrice(price, amount) {
+    let p = parseFloat(price);
+    let a = parseFloat(amount);
+    return ((isNaN(p) || isNaN(a)) ? 0 : p * a);
+  }
+
+  calculateTotal() {
+    let { line_items } = this.state;
+    return line_items.map(i => this.totalPrice(i.price, i.amount))
+                     .reduce((pv, cv) => pv + cv, 0);
+  }
+
   render() {
     return(
       <table className="table table-bordered table-hover">
         <tr>
-          <th>Nr</th>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Amount</th>
-          <th>Total</th>
-          <th>Action</th>
+          <th width="1%">Nr</th>
+          <th width="50%">Name</th>
+          <th width="20%">Price</th>
+          <th width="10%">Amount</th>
+          <th width="15%">Total</th>
+          <th width="4%">Action</th>
         </tr>
         <LineItem index={0} price={this.state.line_items[0]['price']}
                   amount={this.state.line_items[0]['amount']}
@@ -92,7 +105,7 @@ class InvoiceLineItems extends React.Component {
                   amountChanged={this.amountChanged} />
         <tr>
           <td colSpan="4"></td>
-          <th>...</th>
+          <th>${this.calculateTotal()}</th>
           <td>
             <button className="btn btn-success">
               <span className="glyphicon glyphicon-plus"></span>
