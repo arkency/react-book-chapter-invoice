@@ -27,12 +27,12 @@ class LineItem extends React.Component {
         <td width="15%">
           <input name="price" value={price}
                  className="form-control"
-                 onChange={priceChanged(index)} />
+                 onChange={priceChanged.bind(null, index)} />
         </td>
         <td width="15%">
           <input name="amount" value={amount}
                  className="form-control"
-                 onChange={amountChanged(index)} />
+                 onChange={amountChanged.bind(null, index)} />
         </td>
         <td width="15%">{this.calculateTotal()}</td>
         <td width="4%">...</td>
@@ -40,9 +40,6 @@ class LineItem extends React.Component {
     );
   }
 }
-
-
-// https://facebook.github.io/react/tips/communicate-between-components.html
 
 class InvoiceLineItems extends React.Component {
   constructor(props) {
@@ -58,15 +55,15 @@ class InvoiceLineItems extends React.Component {
     this.amountChanged = this.amountChanged.bind(this);
   }
 
-  priceChanged(event, index) {
+  priceChanged(index, event) {
     let { line_items } = this.state;
-    line_items[index]['price'] = event.target.value;
+    line_items[index].price = event.target.value;
     this.setState({ line_items });
   }
 
-  amountChanged(event, index) {
+  amountChanged(index, event) {
     let { line_items } = this.state;
-    line_items[index]['amount'] = event.target.value;
+    line_items[index].amount = event.target.value;
     this.setState({ line_items });
   }
 
