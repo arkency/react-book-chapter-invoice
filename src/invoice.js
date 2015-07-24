@@ -14,7 +14,8 @@ class LineItem extends React.Component {
   render() {
     let { index,
           price, priceChanged,
-          amount, amountChanged } = this.props;
+          amount, amountChanged,
+          deleteLineItem } = this.props;
 
     return(
       <tr>
@@ -37,7 +38,8 @@ class LineItem extends React.Component {
         </td>
         <td>${this.calculateTotal()}</td>
         <td>
-          <button className="btn btn-danger">
+          <button className="btn btn-danger"
+                  onClick={deleteLineItem.bind(null, index)}>
             <span className="glyphicon glyphicon-trash"></span>
           </button>
         </td>
@@ -53,6 +55,8 @@ class InvoiceLineItems extends React.Component {
 
     this.priceChanged = this.priceChanged.bind(this);
     this.amountChanged = this.amountChanged.bind(this);
+    this.addLineItem = this.addLineItem.bind(this);
+    this.deleteLineItem = this.deleteLineItem.bind(this);
   }
 
   priceChanged(index, event) {
@@ -64,6 +68,18 @@ class InvoiceLineItems extends React.Component {
   amountChanged(index, event) {
     let { line_items } = this.state;
     line_items[index].amount = event.target.value;
+    this.setState({ line_items });
+  }
+
+  addLineItem(event) {
+    let { line_items } = this.state;
+    line_items.push({ price: null, amount: null });
+    this.setState({ line_items });
+  }
+
+  deleteLineItem(index, event) {
+    let { line_items } = this.state;
+    line_items.splice(index, 1)
     this.setState({ line_items });
   }
 
@@ -81,47 +97,51 @@ class InvoiceLineItems extends React.Component {
 
   tableHeader() {
     return(
-       <tr>
-         <th width="1%">Nr</th>
-         <th width="55%">Name</th>
-         <th width="20%">Price</th>
-         <th width="10%">Amount</th>
-         <th width="10%">Total</th>
-         <th width="4%">Action</th>
-       </tr>
+      <thead>
+        <tr>
+          <th width="1%">Nr</th>
+          <th width="55%">Name</th>
+          <th width="20%">Price</th>
+          <th width="10%">Amount</th>
+          <th width="10%">Total</th>
+          <th width="4%">Action</th>
+        </tr>
+      </thead>
      );
   }
 
   tableFooter() {
     return(
-      <tr>
-        <td colSpan="4"></td>
-        <th>${this.calculateTotal()}</th>
-        <td>
-          <button className="btn btn-success">
-            <span className="glyphicon glyphicon-plus"></span>
-          </button>
-        </td>
-      </tr>
+      <tfoot>
+        <tr>
+          <td colSpan="4"></td>
+          <th>${this.calculateTotal()}</th>
+          <td>
+            <button className="btn btn-success" onClick={this.addLineItem}>
+              <span className="glyphicon glyphicon-plus"></span>
+            </button>
+          </td>
+        </tr>
+      </tfoot>
     );
   }
 
   render() {
     let line_items = [];
-
     for(var index in this.state.line_items) {
       line_items.push(
         <LineItem index={index} price={this.state.line_items[index].price}
                   amount={this.state.line_items[index].amount}
                   priceChanged={this.priceChanged}
-                  amountChanged={this.amountChanged} />
+                  amountChanged={this.amountChanged}
+                  deleteLineItem={this.deleteLineItem}/>
       );
     }
 
     return(
       <table className="table table-bordered table-hover">
         {this.tableHeader()}
-        {line_items}
+        <tbody>{line_items}</tbody>
         {this.tableFooter()}
       </table>
     );
