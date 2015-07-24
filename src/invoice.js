@@ -27,12 +27,12 @@ class LineItem extends React.Component {
         <td width="15%">
           <input name="price" value={price}
                  className="form-control"
-                 onChange={priceChanged} />
+                 onChange={priceChanged(index)} />
         </td>
         <td width="15%">
           <input name="amount" value={amount}
                  className="form-control"
-                 onChange={amountChanged} />
+                 onChange={amountChanged(index)} />
         </td>
         <td width="15%">{this.calculateTotal()}</td>
         <td width="4%">...</td>
@@ -47,27 +47,30 @@ class LineItem extends React.Component {
 class InvoiceLineItems extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { line_items: [{ price: null, amount: null }] };
+    this.state = {
+      line_items: [
+        { price: null, amount: null },
+        { price: null, amount: null }
+      ]
+    };
 
     this.priceChanged = this.priceChanged.bind(this);
     this.amountChanged = this.amountChanged.bind(this);
   }
 
-  priceChanged(event) {
+  priceChanged(event, index) {
     let { line_items } = this.state;
-    line_items[0]['price'] = event.target.value;
+    line_items[index]['price'] = event.target.value;
     this.setState({ line_items });
   }
 
-  amountChanged(event) {
+  amountChanged(event, index) {
     let { line_items } = this.state;
-    line_items[0]['amount'] = event.target.value;
+    line_items[index]['amount'] = event.target.value;
     this.setState({ line_items });
   }
 
   render() {
-    let { price, amount } = this.state.line_items[0];
-
     return(
       <table className="table table-bordered table-hover">
         <tr>
@@ -78,7 +81,12 @@ class InvoiceLineItems extends React.Component {
           <th>Total</th>
           <th>Action</th>
         </tr>
-        <LineItem index="0" price={price} amount={amount}
+        <LineItem index={0} price={this.state.line_items[0]['price']}
+                  amount={this.state.line_items[0]['amount']}
+                  priceChanged={this.priceChanged}
+                  amountChanged={this.amountChanged} />
+        <LineItem index={1} price={this.state.line_items[1]['price']}
+                  amount={this.state.line_items[1]['amount']}
                   priceChanged={this.priceChanged}
                   amountChanged={this.amountChanged} />
       </table>
