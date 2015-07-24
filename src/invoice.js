@@ -117,7 +117,8 @@ class InvoiceLineItems extends React.Component {
           <td colSpan="4"></td>
           <th>${this.calculateTotal()}</th>
           <td>
-            <button className="btn btn-success" onClick={this.addLineItem}>
+            <button className="btn btn-success"
+                    onClick={this.addLineItem}>
               <span className="glyphicon glyphicon-plus"></span>
             </button>
           </td>
@@ -130,7 +131,8 @@ class InvoiceLineItems extends React.Component {
     let line_items = [];
     for(var index in this.state.line_items) {
       line_items.push(
-        <LineItem index={index} price={this.state.line_items[index].price}
+        <LineItem index={index}
+                  price={this.state.line_items[index].price}
                   amount={this.state.line_items[index].amount}
                   priceChanged={this.priceChanged}
                   amountChanged={this.amountChanged}
