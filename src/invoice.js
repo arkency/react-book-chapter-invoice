@@ -1,8 +1,4 @@
 class LineItem extends React.Component {
-  number() {
-    return (parseInt(this.props.index) + 1);
-  }
-
   calculateTotal() {
     let { price, amount } = this.props;
     let p = parseFloat(price);
@@ -10,6 +6,9 @@ class LineItem extends React.Component {
     return ((isNaN(p) || isNaN(a)) ? 0 : p * a);
   }
 
+  number() {
+    return (parseInt(this.props.index) + 1);
+  }
 
   render() {
     let { index,
@@ -136,14 +135,16 @@ class InvoiceLineItems extends React.Component {
                   amount={this.state.line_items[index].amount}
                   priceChanged={this.priceChanged}
                   amountChanged={this.amountChanged}
-                  deleteLineItem={this.deleteLineItem}/>
+                  deleteLineItem={this.deleteLineItem} />
       );
     }
 
     return(
       <table className="table table-bordered table-hover">
         {this.tableHeader()}
-        <tbody>{line_items}</tbody>
+        <tbody>
+          {line_items}
+        </tbody>
         {this.tableFooter()}
       </table>
     );
