@@ -54,7 +54,7 @@ class LineItem extends React.Component {
 class InvoiceLineItems extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { line_items: [{ price: null, amount: null }] };
+    this.state = { line_items: [{ price: "", amount: "" }] };
 
     this.priceChanged = this.priceChanged.bind(this);
     this.amountChanged = this.amountChanged.bind(this);
@@ -76,7 +76,7 @@ class InvoiceLineItems extends React.Component {
 
   addLineItem(event) {
     let { line_items } = this.state;
-    line_items.push({ price: null, amount: null });
+    line_items.push({ price: "", amount: "" });
     this.setState({ line_items });
   }
 
