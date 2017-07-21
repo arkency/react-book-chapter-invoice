@@ -1,3 +1,7 @@
+import React from "react";
+
+import ReactDOM from 'react-dom';
+
 class LineItem extends React.Component {
   calculateTotal() {
     let { price, amount } = this.props;
@@ -151,7 +155,7 @@ class InvoiceLineItems extends React.Component {
   }
 }
 
-React.render(
+ReactDOM.render(
   <InvoiceLineItems />,
   document.getElementById("invoice")
 );
