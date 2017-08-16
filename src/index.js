@@ -1,49 +1,68 @@
-import React from "react";
+import "bootstrap/dist/css/bootstrap.css";
 
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 
 class LineItem extends React.Component {
   calculateTotal() {
     let { price, amount } = this.props;
     let p = parseFloat(price);
     let a = parseFloat(amount);
-    return ((isNaN(p) || isNaN(a)) ? 0 : p * a);
+    return isNaN(p) || isNaN(a) ? 0 : p * a;
   }
 
   number() {
-    return (parseInt(this.props.index) + 1);
+    return parseInt(this.props.index) + 1;
   }
 
   render() {
-    let { index,
-          price, priceChanged,
-          amount, amountChanged,
-          deleteLineItem } = this.props;
+    let {
+      index,
+      price,
+      priceChanged,
+      amount,
+      amountChanged,
+      deleteLineItem
+    } = this.props;
 
-    return(
+    return (
       <tr>
-        <td>{this.number()}.</td>
+        <td>
+          {this.number()}.
+        </td>
         <td>
           <input name="title" className="form-control" />
         </td>
         <td>
           <div className="input-group">
             <div className="input-group-addon">$</div>
-            <input name="price" value={price}
-                   className="form-control"
-                   onChange={priceChanged.bind(null, index)} />
+            <input
+              name="price"
+              value={price}
+              className="form-control"
+              onChange={priceChanged.bind(null, index)}
+            />
           </div>
         </td>
         <td>
-          <input name="amount" value={amount}
-                 className="form-control"
-                 onChange={amountChanged.bind(null, index)} />
+          <input
+            name="amount"
+            value={amount}
+            className="form-control"
+            onChange={amountChanged.bind(null, index)}
+          />
         </td>
-        <td><h4>${this.calculateTotal()}</h4></td>
         <td>
-          <button className="btn btn-danger"
-                  onClick={deleteLineItem.bind(null, index)}>
-            <span className="glyphicon glyphicon-trash"></span>
+          <h4>
+            ${this.calculateTotal()}
+          </h4>
+        </td>
+        <td>
+          <button
+            className="btn btn-danger"
+            onClick={deleteLineItem.bind(null, index)}
+          >
+            <span className="glyphicon glyphicon-trash" />
           </button>
         </td>
       </tr>
@@ -82,24 +101,25 @@ class InvoiceLineItems extends React.Component {
 
   deleteLineItem(index, event) {
     let { line_items } = this.state;
-    line_items.splice(index, 1)
+    line_items.splice(index, 1);
     this.setState({ line_items });
   }
 
   totalPrice(price, amount) {
     let p = parseFloat(price);
     let a = parseFloat(amount);
-    return ((isNaN(p) || isNaN(a)) ? 0 : p * a);
+    return isNaN(p) || isNaN(a) ? 0 : p * a;
   }
 
   calculateTotal() {
     let { line_items } = this.state;
-    return line_items.map(i => this.totalPrice(i.price, i.amount))
-                     .reduce((pv, cv) => pv + cv, 0);
+    return line_items
+      .map(i => this.totalPrice(i.price, i.amount))
+      .reduce((pv, cv) => pv + cv, 0);
   }
 
   tableHeader() {
-    return(
+    return (
       <thead>
         <tr>
           <th width="1%">Nr</th>
@@ -110,19 +130,22 @@ class InvoiceLineItems extends React.Component {
           <th width="4%">Action</th>
         </tr>
       </thead>
-     );
+    );
   }
 
   tableFooter() {
-    return(
+    return (
       <tfoot>
         <tr>
-          <td colSpan="4"></td>
-          <th><h4>${this.calculateTotal()}</h4></th>
+          <td colSpan="4" />
+          <th>
+            <h4>
+              ${this.calculateTotal()}
+            </h4>
+          </th>
           <td>
-            <button className="btn btn-success"
-                    onClick={this.addLineItem}>
-              <span className="glyphicon glyphicon-plus"></span>
+            <button className="btn btn-success" onClick={this.addLineItem}>
+              <span className="glyphicon glyphicon-plus" />
             </button>
           </td>
         </tr>
@@ -132,18 +155,20 @@ class InvoiceLineItems extends React.Component {
 
   render() {
     let line_items = [];
-    for(var index in this.state.line_items) {
+    for (var index in this.state.line_items) {
       line_items.push(
-        <LineItem index={index}
-                  price={this.state.line_items[index].price}
-                  amount={this.state.line_items[index].amount}
-                  priceChanged={this.priceChanged}
-                  amountChanged={this.amountChanged}
-                  deleteLineItem={this.deleteLineItem} />
+        <LineItem
+          index={index}
+          price={this.state.line_items[index].price}
+          amount={this.state.line_items[index].amount}
+          priceChanged={this.priceChanged}
+          amountChanged={this.amountChanged}
+          deleteLineItem={this.deleteLineItem}
+        />
       );
     }
 
-    return(
+    return (
       <table className="table table-bordered table-hover">
         {this.tableHeader()}
         <tbody>
@@ -155,7 +180,4 @@ class InvoiceLineItems extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <InvoiceLineItems />,
-  document.getElementById("invoice")
-);
+ReactDOM.render(<InvoiceLineItems />, document.getElementById("root"));
