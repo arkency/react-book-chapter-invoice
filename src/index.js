@@ -26,9 +26,7 @@ function LineItem(props) {
 
   return (
     <tr>
-      <td>
-        {number()}.
-      </td>
+      <td>{number()}.</td>
       <td>
         <input name="title" className="form-control" />
       </td>
@@ -52,9 +50,7 @@ function LineItem(props) {
         />
       </td>
       <td>
-        <h4>
-          ${calculateTotal()}
-        </h4>
+        <h4>${calculateTotal()}</h4>
       </td>
       <td>
         <button
@@ -69,24 +65,27 @@ function LineItem(props) {
 }
 
 function InvoiceLineItems(props) {
-  const [lineItems, updateLineItems] = useState([{ price: "", amount: "" }])
-
+  const [lineItems, updateLineItems] = useState([{ price: "", amount: "" }]);
 
   function changePrice(itemIndex, event) {
     const price = event.target.value;
     const updatedItems = lineItems.map((item, index) => {
-      if (index !== itemIndex) { return item }
-      return {...item, price}
-    })
+      if (index !== itemIndex) {
+        return item;
+      }
+      return { ...item, price };
+    });
     updateLineItems(updatedItems);
   }
 
   function changeAmount(itemIndex, event) {
     const amount = event.target.value;
     const updatedItems = lineItems.map((item, index) => {
-      if (index !== itemIndex) { return item }
-      return {...item, amount}
-    })
+      if (index !== itemIndex) {
+        return item;
+      }
+      return { ...item, amount };
+    });
     updateLineItems(updatedItems);
   }
 
@@ -134,9 +133,7 @@ function InvoiceLineItems(props) {
         <tr>
           <td colSpan="4" />
           <th>
-            <h4>
-              ${calculateTotal()}
-            </h4>
+            <h4>${calculateTotal()}</h4>
           </th>
           <td>
             <button className="btn btn-success" onClick={addLineItem}>
