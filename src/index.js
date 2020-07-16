@@ -1,124 +1,119 @@
 import "bootstrap/dist/css/bootstrap.css";
 
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-class LineItem extends React.Component {
-  calculateTotal() {
-    let { price, amount } = this.props;
+function LineItem(props) {
+  function calculateTotal() {
+    let { price, amount } = props;
     let p = parseFloat(price);
     let a = parseFloat(amount);
     return isNaN(p) || isNaN(a) ? 0 : p * a;
   }
 
-  number() {
-    return parseInt(this.props.index) + 1;
+  function number() {
+    return parseInt(props.index) + 1;
   }
 
-  render() {
-    let {
-      index,
-      price,
-      priceChanged,
-      amount,
-      amountChanged,
-      deleteLineItem
-    } = this.props;
+  const {
+    index,
+    price,
+    priceChanged,
+    amount,
+    amountChanged,
+    deleteLineItem
+  } = props;
 
-    return (
-      <tr>
-        <td>
-          {this.number()}.
-        </td>
-        <td>
-          <input name="title" className="form-control" />
-        </td>
-        <td>
-          <div className="input-group">
-            <div className="input-group-addon">$</div>
-            <input
-              name="price"
-              value={price}
-              className="form-control"
-              onChange={priceChanged.bind(null, index)}
-            />
-          </div>
-        </td>
-        <td>
+  return (
+    <tr>
+      <td>
+        {number()}.
+      </td>
+      <td>
+        <input name="title" className="form-control" />
+      </td>
+      <td>
+        <div className="input-group">
+          <div className="input-group-addon">$</div>
           <input
-            name="amount"
-            value={amount}
+            name="price"
+            value={price}
             className="form-control"
-            onChange={amountChanged.bind(null, index)}
+            onChange={priceChanged.bind(null, index)}
           />
-        </td>
-        <td>
-          <h4>
-            ${this.calculateTotal()}
-          </h4>
-        </td>
-        <td>
-          <button
-            className="btn btn-danger"
-            onClick={deleteLineItem.bind(null, index)}
-          >
-            <span className="glyphicon glyphicon-trash" />
-          </button>
-        </td>
-      </tr>
-    );
-  }
+        </div>
+      </td>
+      <td>
+        <input
+          name="amount"
+          value={amount}
+          className="form-control"
+          onChange={amountChanged.bind(null, index)}
+        />
+      </td>
+      <td>
+        <h4>
+          ${calculateTotal()}
+        </h4>
+      </td>
+      <td>
+        <button
+          className="btn btn-danger"
+          onClick={deleteLineItem.bind(null, index)}
+        >
+          <span className="glyphicon glyphicon-trash" />
+        </button>
+      </td>
+    </tr>
+  );
 }
 
-class InvoiceLineItems extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { line_items: [{ price: "", amount: "" }] };
+function InvoiceLineItems(props) {
+  const [lineItems, updateLineItems] = useState([{ price: "", amount: "" }])
 
-    this.priceChanged = this.priceChanged.bind(this);
-    this.amountChanged = this.amountChanged.bind(this);
-    this.addLineItem = this.addLineItem.bind(this);
-    this.deleteLineItem = this.deleteLineItem.bind(this);
+
+  function changePrice(itemIndex, event) {
+    const price = event.target.value;
+    const updatedItems = lineItems.map((item, index) => {
+      if (index !== itemIndex) { return item }
+      return {...item, price}
+    })
+    updateLineItems(updatedItems);
   }
 
-  priceChanged(index, event) {
-    let { line_items } = this.state;
-    line_items[index].price = event.target.value;
-    this.setState({ line_items });
+  function changeAmount(itemIndex, event) {
+    const amount = event.target.value;
+    const updatedItems = lineItems.map((item, index) => {
+      if (index !== itemIndex) { return item }
+      return {...item, amount}
+    })
+    updateLineItems(updatedItems);
   }
 
-  amountChanged(index, event) {
-    let { line_items } = this.state;
-    line_items[index].amount = event.target.value;
-    this.setState({ line_items });
+  function addLineItem(event) {
+    const newItem = { price: "", amount: "" };
+    const updatedItems = lineItems.concat(newItem);
+    updateLineItems(updatedItems);
   }
 
-  addLineItem(event) {
-    let { line_items } = this.state;
-    line_items.push({ price: "", amount: "" });
-    this.setState({ line_items });
+  function deleteLineItem(index, event) {
+    const updatedItems = lineItems.filter((_, i) => index !== i);
+    updateLineItems(updatedItems);
   }
 
-  deleteLineItem(index, event) {
-    let { line_items } = this.state;
-    line_items.splice(index, 1);
-    this.setState({ line_items });
-  }
-
-  totalPrice(price, amount) {
-    let p = parseFloat(price);
-    let a = parseFloat(amount);
+  function totalPrice(price, amount) {
+    const p = parseFloat(price);
+    const a = parseFloat(amount);
     return isNaN(p) || isNaN(a) ? 0 : p * a;
   }
 
-  calculateTotal() {
-    let { line_items } = this.state;
-    return line_items
-      .map(i => this.totalPrice(i.price, i.amount))
+  function calculateTotal() {
+    return lineItems
+      .map(i => totalPrice(i.price, i.amount))
       .reduce((pv, cv) => pv + cv, 0);
   }
 
-  tableHeader() {
+  function tableHeader() {
     return (
       <thead>
         <tr>
@@ -133,18 +128,18 @@ class InvoiceLineItems extends React.Component {
     );
   }
 
-  tableFooter() {
+  function tableFooter() {
     return (
       <tfoot>
         <tr>
           <td colSpan="4" />
           <th>
             <h4>
-              ${this.calculateTotal()}
+              ${calculateTotal()}
             </h4>
           </th>
           <td>
-            <button className="btn btn-success" onClick={this.addLineItem}>
+            <button className="btn btn-success" onClick={addLineItem}>
               <span className="glyphicon glyphicon-plus" />
             </button>
           </td>
@@ -153,31 +148,25 @@ class InvoiceLineItems extends React.Component {
     );
   }
 
-  render() {
-    let line_items = [];
-    for (var index in this.state.line_items) {
-      line_items.push(
-        <LineItem
-          index={index}
-          price={this.state.line_items[index].price}
-          amount={this.state.line_items[index].amount}
-          priceChanged={this.priceChanged}
-          amountChanged={this.amountChanged}
-          deleteLineItem={this.deleteLineItem}
-        />
-      );
-    }
-
-    return (
-      <table className="table table-bordered table-hover">
-        {this.tableHeader()}
-        <tbody>
-          {line_items}
-        </tbody>
-        {this.tableFooter()}
-      </table>
-    );
-  }
+  return (
+    <table className="table table-bordered table-hover">
+      {tableHeader()}
+      <tbody>
+        {lineItems.map((item, index) => (
+          <LineItem
+            key={`item-${index}`}
+            index={index}
+            price={item.price}
+            amount={item.amount}
+            priceChanged={changePrice}
+            amountChanged={changeAmount}
+            deleteLineItem={deleteLineItem}
+          />
+        ))}
+      </tbody>
+      {tableFooter()}
+    </table>
+  );
 }
 
 ReactDOM.render(<InvoiceLineItems />, document.getElementById("root"));
